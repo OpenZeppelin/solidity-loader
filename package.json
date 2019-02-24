@@ -1,0 +1,21 @@
+{
+  "name": "zeppelin-solidity-hot-loader",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "eslint": "^5.14.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "find-up": "^3.0.0",
+    "truffle": "^5.0.5",
+    "truffle-config": "^1.1.4",
+    "truffle-hdwallet-provider": "^1.0.4",
+    "dotenv": "^6.2.0"
+  }
+}
