@@ -8,15 +8,17 @@ const childProcess = require('child_process');
 const { promisify } = util;
 const exec = promisify(childProcess.exec);
 const readFile = promisify(fs.readFile);
+const fileExists = promisify(fs.access);
 const wait = promisify(setTimeout);
 
+// Finds truffle conifg file path
 const getTruffleConfig = async (opts) => {
   let file = await findUp('truffle-config.js', opts);
   if (!file) file = await findUp('truffle.js', opts);
   return file;
 };
 
-
+// Loads truffle config
 const getConfig = async ({ network, cwd }) => {
   if (!network) {
     throw new Error('You must specify the network name to deploy to.');
@@ -33,14 +35,14 @@ const getConfig = async ({ network, cwd }) => {
   return config;
 };
 
-// To prevent race conditions
+// Lock to prevent race conditions
 let isZeppelinBusy = false;
 
 module.exports = async function loader(source) {
   const callback = this.async();
 
   try {
-    // todo: pull from zos session
+    // todo: pull from loader config
     const network = 'development';
     const contractPath = this.context;
     const cwd = path.resolve(contractPath, '..');
@@ -52,21 +54,26 @@ module.exports = async function loader(source) {
     const compiledContractPath = path
       .resolve(config.contracts_build_directory, `${contractName}.json`);
 
+    // wait until compile/push/update is done
     while (isZeppelinBusy) await wait(500);
 
     isZeppelinBusy = true;
 
     try {
+      // push new code into local blockchain
       let result = await exec(`zos push --network ${network}`, { cwd });
+      // update proxy contract
       result = await exec(`zos update ${contractName} --network ${network}`, { cwd });
     } finally {
+      // release lock
       isZeppelinBusy = false;
     }
 
+    // read JSON contract produced by compile and return it
     const solJSON = await readFile(compiledContractPath, 'utf8');
-
     callback(null, solJSON);
   } catch (e) {
-    callback(e, null);
+    // report error here, because configuration seems to be lacking
+    callback(e, {});
   }
 };
