@@ -10,23 +10,22 @@ const exec = promisify(childProcess.exec);
 const readFile = promisify(fs.readFile);
 const wait = promisify(setTimeout);
 
-const getTruffleConfig = () => {
-  let file = findUp.sync('truffle-config.js');
-  if (!file) file = findUp.sync('truffle.js');
+const getTruffleConfig = async (opts) => {
+  let file = await findUp('truffle-config.js', opts);
+  if (!file) file = await findUp('truffle.js', opts);
   return file;
 };
 
 
-const getConfig = (opts) => {
-  if (!opts.network) {
-    throw new Error('You must specify the network name to deploy to. (network)');
+const getConfig = async ({ network, cwd }) => {
+  if (!network) {
+    throw new Error('You must specify the network name to deploy to.');
   }
 
   let config;
-
-  const truffleConfigPath = getTruffleConfig();
+  const truffleConfigPath = await getTruffleConfig({ cwd });
   if (truffleConfigPath) {
-    config = truffleConfig.load(truffleConfigPath, opts);
+    config = truffleConfig.load(truffleConfigPath, { network });
   } else {
     throw new Error('No Truffle Config file found!');
   }
@@ -40,32 +39,34 @@ let isZeppelinBusy = false;
 module.exports = async function loader(source) {
   const callback = this.async();
 
-  // todo: pull from zos session
-  const network = 'development';
-  const contractPath = this.context;
-  const contractFilePath = this.resourcePath;
-  const config = getConfig({ network });
-  const contractsBuildDirectory = config.contracts_build_directory;
-  const contractFileName = path.basename(contractFilePath);
-  const contractName = contractFileName.charAt(0).toUpperCase() + contractFileName.slice(1, contractFileName.length - 4);
-  const compiledContractPath = path
-    .resolve(config.contracts_build_directory, `${contractName}.json`);
-
-  while (isZeppelinBusy) await wait(500);
-
-  isZeppelinBusy = true;
-
   try {
+    // todo: pull from zos session
+    const network = 'development';
+    const contractPath = this.context;
     const cwd = path.resolve(contractPath, '..');
-    let result = await exec(`zos push --network ${network}`, { cwd });
-    result = await exec(`zos update ${contractName} --network ${network}`, { cwd });
+    const contractFilePath = this.resourcePath;
+    const config = await getConfig({ network, cwd });
+    const contractsBuildDirectory = config.contracts_build_directory;
+    const contractFileName = path.basename(contractFilePath);
+    const contractName = contractFileName.charAt(0).toUpperCase() + contractFileName.slice(1, contractFileName.length - 4);
+    const compiledContractPath = path
+      .resolve(config.contracts_build_directory, `${contractName}.json`);
+
+    while (isZeppelinBusy) await wait(500);
+
+    isZeppelinBusy = true;
+
+    try {
+      let result = await exec(`zos push --network ${network}`, { cwd });
+      result = await exec(`zos update ${contractName} --network ${network}`, { cwd });
+    } finally {
+      isZeppelinBusy = false;
+    }
+
+    const solJSON = await readFile(compiledContractPath, 'utf8');
+
+    callback(null, solJSON);
   } catch (e) {
     callback(e, null);
-  } finally {
-    isZeppelinBusy = false;
   }
-
-  const solJSON = await readFile(compiledContractPath, 'utf8');
-
-  callback(null, solJSON);
 };
