@@ -1,6 +1,8 @@
 const path = require('path');
 const util = require('util');
 const fs = require('fs');
+
+const { getOptions } = require('loader-utils');
 const truffleConfig = require('truffle-config');
 const findUp = require('find-up');
 const childProcess = require('child_process');
@@ -42,8 +44,8 @@ module.exports = async function loader(source) {
   const callback = this.async();
 
   try {
-    // todo: pull from loader config
-    const network = 'development';
+    const options = getOptions(this);
+    const network = (options && options.network) ? options.network : 'development';
     const contractPath = this.context;
     const cwd = path.resolve(contractPath, '..');
     const contractFilePath = this.resourcePath;

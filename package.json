@@ -23,6 +23,7 @@
   "homepage": "https://github.com/ylv-io/zeppelin-solidity-hot-loader#readme",
   "dependencies": {
     "find-up": "^3.0.0",
+    "loader-utils": "^1.2.3",
     "truffle-config": "^1.1.4"
   },
   "devDependencies": {
