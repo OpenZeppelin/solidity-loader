@@ -1,10 +1,10 @@
 {
   "name": "zeppelin-solidity-hot-loader",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "Webpack ZepKit Solidity Hot Loader",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --detectOpenHandles"
   },
   "repository": {
     "type": "git",
@@ -27,8 +27,18 @@
     "truffle-config": "^1.1.4"
   },
   "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "babel-jest": "^24.1.0",
+    "babel-preset-env": "^1.7.0",
     "eslint": "^5.14.1",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.16.0"
+    "eslint-plugin-import": "^2.16.0",
+    "jest": "^24.1.0",
+    "json-loader": "^0.5.7",
+    "memory-fs": "^0.4.1",
+    "require-from-string": "^2.0.2",
+    "webpack": "^4.29.5",
+    "zos-lib": "^2.2.1"
   }
 }
