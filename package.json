@@ -1,10 +1,10 @@
 {
   "name": "zeppelin-solidity-hot-loader",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Webpack ZepKit Solidity Hot Loader",
   "main": "index.js",
   "scripts": {
-    "test": "jest --detectOpenHandles"
+    "test": "jest --runInBand --detectOpenHandles"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
   "dependencies": {
     "find-up": "^3.0.0",
     "loader-utils": "^1.2.3",
+    "path-is-inside": "^1.0.2",
     "truffle-config": "^1.1.4"
   },
   "devDependencies": {
