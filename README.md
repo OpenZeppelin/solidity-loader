@@ -2,6 +2,8 @@
 Works well with [ZepKit](https://github.com/zeppelinos/zepkit) and [ZeppelinOS](https://github.com/zeppelinos).
 #### Features
 * Allows to import .sol files directly into source code.
+* Allows to specify contract name for .sol files, like require("Contract.sol?contract=Counter").
+* Tracks dependencies for contracts, so children are updated when parents are modified.
 * Converts .sol files into .json using compile->zos push->zos update.
 * Uses only development network, so won't run on any other networks.
 * You can set development network name using loader's config.

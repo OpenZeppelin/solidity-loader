@@ -1,11 +1,9 @@
 const path = require('path');
 
-const pathIsInside = require('path-is-inside');
-
 const { getOptions, parseQuery } = require('loader-utils');
 
 const { exec, readFile, wait } = require('./lib/util');
-const { getConfig, getImports } = require('./lib/truffle');
+const { getConfig, getLocalDependencies } = require('./lib/truffle');
 
 // Lock to prevent race conditions
 let isZeppelinBusy = false;
@@ -49,12 +47,11 @@ module.exports = async function loader(source) {
 
     // read JSON contract produced by compile and return it
     const solJSON = await readFile(compiledContractPath, 'utf8');
-    // get all contract imports
-    const imports = getImports(JSON.parse(solJSON));
-    // imports located inside our contracts folder are the only one we have to watch
-    const projectImports = imports.filter(imp => pathIsInside(imp, contractFolderPath));
+    // get all contract's local dependencies
+    const deps = await getLocalDependencies(contractName, contractsBuildDirectory, contractFolderPath);
     // add these imports as dependencies for a contract
-    projectImports.map(imp => addDependency(imp));
+    deps.map(imp => addDependency(imp));
+    // return result to webpack
     callback(null, solJSON);
   } catch (e) {
     // report error here, because configuration seems to be lacking

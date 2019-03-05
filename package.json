@@ -1,6 +1,6 @@
 {
   "name": "zeppelin-solidity-hot-loader",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Webpack ZepKit Solidity Hot Loader",
   "main": "index.js",
   "scripts": {
@@ -22,9 +22,9 @@
   },
   "homepage": "https://github.com/ylv-io/zeppelin-solidity-hot-loader#readme",
   "dependencies": {
+    "array-flatten": "^2.1.2",
     "find-up": "^3.0.0",
     "loader-utils": "^1.2.3",
-    "path-is-inside": "^1.0.2",
     "truffle-config": "^1.1.4"
   },
   "devDependencies": {
