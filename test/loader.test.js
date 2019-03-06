@@ -3,6 +3,8 @@ import requireFromString from 'require-from-string';
 
 import compiler from './compiler';
 
+import { getLocalDependencies } from '../lib/truffle';
+
 // because we want to mock loader
 const util = require('../lib/util');
 
@@ -21,6 +23,8 @@ const disabledOptions = {
   disabled: true,
 };
 
+const contractsDir = './test/data/contracts/';
+const contractsBuildDir = './test/data/build/';
 const contractFilePath = './data/contracts/Contract.sol';
 const cwd = { cwd: path.resolve(__dirname, 'data') };
 
@@ -34,7 +38,6 @@ const execute = async (options, source, contractName) => {
 
   expect(contract.contractName).toBe(contractName);
   expect(contract.abi.length).toBeGreaterThan(0);
-  expect(Object.keys(contract.networks).length).toBeGreaterThan(0);
 };
 
 beforeEach(() => {
@@ -65,5 +68,13 @@ test('Serves json files from file system while disabled', async (done) => {
   const contractName = 'Contract';
   await execute(disabledOptions, contractFilePath, contractName);
   expect(util.exec).toHaveBeenCalledTimes(0);
+  done();
+});
+
+test('Discovers parent contacts as dependencies', async (done) => {
+  const ret = ['B.sol', 'Base.sol'];
+  const deps = await getLocalDependencies('C', path.resolve(contractsBuildDir), path.resolve(contractsDir));
+  expect(deps.length).toEqual(2);
+  expect(deps.map(dep => path.basename(dep))).toEqual(ret);
   done();
 });

@@ -35,3 +35,7 @@ contract Counter is Initializable {
   //   return true;
   // }
 }
+
+contract Contract is Initializable {
+  string public secret;
+}
