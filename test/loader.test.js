@@ -71,10 +71,16 @@ test('Serves json files from file system while disabled', async (done) => {
   done();
 });
 
-test('Discovers parent contacts as dependencies', async (done) => {
+test('Discovers parent contracts as dependencies', async (done) => {
   const ret = ['B.sol', 'Base.sol'];
   const deps = await getLocalDependencies('C', path.resolve(contractsBuildDir), path.resolve(contractsDir));
   expect(deps.length).toEqual(2);
   expect(deps.map(dep => path.basename(dep))).toEqual(ret);
+  done();
+});
+
+test('Discovers parent contracts as dependencies for contract inside one .sol file with many contracts', async (done) => {
+  const deps = await getLocalDependencies('Contract', path.resolve(contractsBuildDir), path.resolve(contractsDir));
+  expect(deps.length).toEqual(0);
   done();
 });

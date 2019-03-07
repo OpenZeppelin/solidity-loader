@@ -2,6 +2,7 @@ pragma solidity ^0.5.0;
 
 // import "openzeppelin-eth/contracts/ownership/Ownable.sol";
 import "zos-lib/contracts/Initializable.sol";
+import "./Base.sol";
 
 contract Counter is Initializable {
   //it keeps a count to demonstrate stage changes
