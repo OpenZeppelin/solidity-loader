@@ -1,6 +1,6 @@
 {
   "name": "zeppelin-solidity-hot-loader",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Webpack ZepKit Solidity Hot Loader",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ylv-io/zeppelin-solidity-hot-loader.git"
+    "url": "git+https://github.com/zeppelinos/zeppelin-solidity-hot-loader.git"
   },
   "keywords": [
     "zeppelinos",
@@ -18,9 +18,9 @@
   "author": "Igor Yalovoy <to@ylv.io>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ylv-io/zeppelin-solidity-hot-loader/issues"
+    "url": "https://github.com/zeppelinos/zeppelin-solidity-hot-loader/issues"
   },
-  "homepage": "https://github.com/ylv-io/zeppelin-solidity-hot-loader#readme",
+  "homepage": "https://github.com/zeppelinos/zeppelin-solidity-hot-loader#readme",
   "dependencies": {
     "array-flatten": "^2.1.2",
     "find-up": "^3.0.0",

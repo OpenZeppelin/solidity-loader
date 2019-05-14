@@ -36,9 +36,9 @@ module.exports = async function loader(source) {
 
       try {
         // push new code into local blockchain
-        let result = await exec(`zos push --network ${network}`, { cwd });
+        let result = await exec(`zos push --network ${network} --no-interactive`, { cwd });
         // update proxy contract
-        result = await exec(`zos update ${contractName} --network ${network}`, { cwd });
+        result = await exec(`zos update ${contractName} --network ${network} --no-interactive`, { cwd });
       } finally {
         // release lock
         isZeppelinBusy = false;

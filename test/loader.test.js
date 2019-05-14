@@ -49,8 +49,8 @@ test('Runs truffle compile, zos push, and zos update commands to produce fresh .
   const { network } = defaultOptions;
   await execute(defaultOptions, contractFilePath, contractName);
   expect(util.exec).toHaveBeenCalledTimes(2);
-  expect(util.exec).toHaveBeenCalledWith(`zos update ${contractName} --network ${network}`, cwd);
-  expect(util.exec).toHaveBeenCalledWith(`zos push --network ${network}`, cwd);
+  expect(util.exec).toHaveBeenCalledWith(`zos update ${contractName} --network ${network} --no-interactive`, cwd);
+  expect(util.exec).toHaveBeenCalledWith(`zos push --network ${network} --no-interactive`, cwd);
   done();
 });
 
@@ -59,8 +59,8 @@ test('Runs truffle compile, zos push, and zos update commands to produce fresh .
   const contractName = 'Counter';
   await execute(defaultOptions, `${contractFilePath}?contract=${contractName}`, contractName);
   expect(util.exec).toHaveBeenCalledTimes(2);
-  expect(util.exec).toHaveBeenCalledWith(`zos update ${contractName} --network ${network}`, cwd);
-  expect(util.exec).toHaveBeenCalledWith(`zos push --network ${network}`, cwd);
+  expect(util.exec).toHaveBeenCalledWith(`zos update ${contractName} --network ${network} --no-interactive`, cwd);
+  expect(util.exec).toHaveBeenCalledWith(`zos push --network ${network} --no-interactive`, cwd);
   done();
 });
 
