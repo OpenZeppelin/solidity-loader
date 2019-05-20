@@ -26,7 +26,14 @@ const disabledOptions = {
 const contractsDir = './test/data/contracts/';
 const contractsBuildDir = './test/data/build/';
 const contractFilePath = './data/contracts/Contract.sol';
-const cwd = { cwd: path.resolve(__dirname, 'data') };
+const execOptions = {
+  cwd: path.resolve(__dirname, 'data'),
+  env: {
+    ...process.env,
+    // disable an interactive in ZeppelinOS by setting env variable to prevent blocking
+    DISABLE_INTERACTIVITY: 'FULL',
+  },
+};
 
 util.exec = jest.fn();
 
@@ -49,8 +56,8 @@ test('Runs truffle compile, zos push, and zos update commands to produce fresh .
   const { network } = defaultOptions;
   await execute(defaultOptions, contractFilePath, contractName);
   expect(util.exec).toHaveBeenCalledTimes(2);
-  expect(util.exec).toHaveBeenCalledWith(`zos update ${contractName} --network ${network} --no-interactive`, cwd);
-  expect(util.exec).toHaveBeenCalledWith(`zos push --network ${network} --no-interactive`, cwd);
+  expect(util.exec).toHaveBeenCalledWith(`zos update ${contractName} --network ${network}`, execOptions);
+  expect(util.exec).toHaveBeenCalledWith(`zos push --network ${network}`, execOptions);
   done();
 });
 
@@ -59,8 +66,8 @@ test('Runs truffle compile, zos push, and zos update commands to produce fresh .
   const contractName = 'Counter';
   await execute(defaultOptions, `${contractFilePath}?contract=${contractName}`, contractName);
   expect(util.exec).toHaveBeenCalledTimes(2);
-  expect(util.exec).toHaveBeenCalledWith(`zos update ${contractName} --network ${network} --no-interactive`, cwd);
-  expect(util.exec).toHaveBeenCalledWith(`zos push --network ${network} --no-interactive`, cwd);
+  expect(util.exec).toHaveBeenCalledWith(`zos update ${contractName} --network ${network}`, execOptions);
+  expect(util.exec).toHaveBeenCalledWith(`zos push --network ${network}`, execOptions);
   done();
 });
 

@@ -35,12 +35,20 @@ module.exports = async function loader(source) {
       isZeppelinBusy = true;
 
       try {
+        const execOptions = {
+          cwd,
+          env: {
+            ...process.env,
+            // disable an interactive in ZeppelinOS by setting env variable to prevent blocking
+            ZOS_NON_INTERACTIVE: 'FULL',
+          },
+        };
         // push new code into local blockchain
-        let result = await exec(`zos push --network ${network} --no-interactive`, { cwd });
-        // update proxy contract
-        result = await exec(`zos update ${contractName} --network ${network} --no-interactive`, { cwd });
+        let result = await exec(`zos push --network ${network}`, execOptions);
+        // update a proxy contract
+        result = await exec(`zos update ${contractName} --network ${network}`, execOptions);
       } finally {
-        // release lock
+        // release the lock
         isZeppelinBusy = false;
       }
     }
