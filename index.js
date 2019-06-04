@@ -21,8 +21,6 @@ module.exports = async function loader(source) {
   const callback = this.async();
   const addDependency = this.addDependency;
 
-  let notInstalledMessage;
-
   try {
     const params = parseQuery(this.resourceQuery || '?');
     const options = getOptions(this);
@@ -40,11 +38,11 @@ module.exports = async function loader(source) {
     // if loader is disabled do not compile/push/upgrade, but still serve .json contracts from file system.
     if (!disabled) {
       // check if local version is installed
-      const isLocal = await packageExist(oz, cwd);
+      const localPath = await packageExist(oz, cwd);
       // check if global version is installed
-      const isGlobal = !!which.sync(oz, { nothrow: true });
+      const globalPath = !localPath ? which.sync(oz, { nothrow: true }) : '';
       // if not installed at all do nothing
-      if (isLocal || isGlobal) {
+      if (localPath || globalPath) {
         // wait until compile/push/update is done
         while (isZeppelinBusy) await wait(500);
 
@@ -60,17 +58,20 @@ module.exports = async function loader(source) {
             },
           };
           // local has priority over global
-          const command = isLocal ? `npx ${oz}` : oz;
+          // single quotes around local zos are needed because local path may have spaces
+          const command = localPath ? `'${localPath}'` : oz;
           // push new code into local blockchain
-          let result = await exec(`${command} push --network ${network}`, execOptions);
+          await exec(`${command} push --network ${network}`, execOptions);
           // update a proxy contract
-          result = await exec(`${command} update ${contractName} --network ${network}`, execOptions);
+          await exec(`${command} update ${contractName} --network ${network}`, execOptions);
         } finally {
           // release the lock
           isZeppelinBusy = false;
         }
       } else {
-        notInstalledMessage = ` ${oz} is not installed either locally or globally.`;
+        callback(new Error(`${oz} is required to support solidity hot-loading. Please run "npm install ${oz}", or disable hot-loading.`), '{}');
+        // return because if zos not installed we should fail
+        return;
       }
     }
 
@@ -86,11 +87,10 @@ module.exports = async function loader(source) {
       // return result to webpack
       callback(null, solJSON);
     } else {
-      callback(new Error(`The contract '${compiledContractPath}' doesn't exist. Try to compile your contracts first.${notInstalledMessage}`), '{}');
+      callback(new Error(`The contract '${compiledContractPath}' doesn't exist. Try to compile your contracts first.`), '{}');
     }
   } catch (e) {
     // report error here, because configuration seems to be lacking
-    e.message = `${e.message}${notInstalledMessage}`;
     callback(e, '{}');
   }
 };

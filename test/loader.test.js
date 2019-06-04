@@ -116,7 +116,7 @@ describe('Hot Loader', () => {
   describe('with only global zos installed', () => {
     beforeAll(() => {
       util.which.sync.mockImplementation(pckg => 'zos');
-      util.packageExist.mockImplementation((pckg, dir) => Promise.resolve(false));
+      util.packageExist.mockImplementation((pckg, dir) => Promise.resolve(''));
     });
 
     coreTests('zos');
@@ -124,10 +124,10 @@ describe('Hot Loader', () => {
 
   describe('with local zos installed', () => {
     beforeAll(() => {
-      util.packageExist.mockImplementation((pckg, dir) => Promise.resolve(true));
+      util.packageExist.mockImplementation((pckg, dir) => Promise.resolve('node_modules/.bin/zos'));
       util.which.sync.mockImplementation(pckg => null);
     });
 
-    coreTests('npx zos');
+    coreTests("'node_modules/.bin/zos'");
   });
 });
