@@ -84,6 +84,8 @@ module.exports = async function loader(source) {
       const deps = await getLocalDependencies(contractName, contractsBuildDirectory, contractFolderPath);
       // add these imports as dependencies for a contract
       deps.map(imp => addDependency(imp));
+      // add the json file as dependency
+      addDependency(compiledContractPath);
       // return result to webpack
       callback(null, solJSON);
     } else {
