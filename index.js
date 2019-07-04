@@ -35,8 +35,10 @@ module.exports = async function loader(source) {
     const contractName = params.contract || contractFileName.charAt(0).toUpperCase() + contractFileName.slice(1, contractFileName.length - 4);
     const compiledContractPath = path.resolve(contractsBuildDirectory, `${contractName}.json`);
 
+    // check if compiled contract exists
+    const isContractPathExists = await pathExists(compiledContractPath);
 
-    // check if local version is installed
+    // check if local version is installedSu
     const localPath = await packageExist(oz, cwd);
     // check if global version is installed
     const globalPath = !localPath ? which.sync(oz, { nothrow: true }) : '';
@@ -67,7 +69,8 @@ module.exports = async function loader(source) {
           await exec(`${command} push --network ${network}`, execOptions);
           // update a proxy contract
           await exec(`${command} update ${contractName} --network ${network}`, execOptions);
-        } else {
+          // compile only if .json doesn't exist
+        } else if (!isContractPathExists) {
           await exec(`${command} compile`, execOptions);
         }
       } finally {
@@ -80,8 +83,6 @@ module.exports = async function loader(source) {
       return;
     }
 
-    // check if compiled contract exists
-    const isContractPathExists = await pathExists(compiledContractPath);
     if (isContractPathExists) {
       // read JSON contract produced by compile and return it
       const solJSON = await readFile(compiledContractPath, 'utf8');
