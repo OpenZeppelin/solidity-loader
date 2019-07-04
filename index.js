@@ -35,44 +35,49 @@ module.exports = async function loader(source) {
     const contractName = params.contract || contractFileName.charAt(0).toUpperCase() + contractFileName.slice(1, contractFileName.length - 4);
     const compiledContractPath = path.resolve(contractsBuildDirectory, `${contractName}.json`);
 
-    // if loader is disabled do not compile/push/upgrade, but still serve .json contracts from file system.
-    if (!disabled) {
-      // check if local version is installed
-      const localPath = await packageExist(oz, cwd);
-      // check if global version is installed
-      const globalPath = !localPath ? which.sync(oz, { nothrow: true }) : '';
-      // if not installed at all do nothing
-      if (localPath || globalPath) {
-        // wait until compile/push/update is done
-        while (isZeppelinBusy) await wait(500);
 
-        isZeppelinBusy = true;
+    // check if local version is installed
+    const localPath = await packageExist(oz, cwd);
+    // check if global version is installed
+    const globalPath = !localPath ? which.sync(oz, { nothrow: true }) : '';
+    // if not installed at all do nothing
+    if (localPath || globalPath) {
+      // wait until compile/push/update is done
+      while (isZeppelinBusy) await wait(500);
 
-        try {
-          const execOptions = {
-            cwd,
-            env: {
-              ...process.env,
-              // disable an interactive in ZeppelinOS by setting env variable to prevent blocking
-              ZOS_NON_INTERACTIVE: 'FULL',
-            },
-          };
-          // local has priority over global
-          // single quotes around local zos are needed because local path may have spaces
-          const command = localPath ? `'${localPath}'` : oz;
+      isZeppelinBusy = true;
+
+      try {
+        const execOptions = {
+          cwd,
+          env: {
+            ...process.env,
+            // disable an interactive in ZeppelinOS by setting env variable to prevent blocking
+            ZOS_NON_INTERACTIVE: 'FULL',
+          },
+        };
+
+        // local has priority over global
+        // single quotes around local zos are needed because local path may have spaces
+        const command = localPath ? `'${localPath}'` : oz;
+
+        // if loader is disabled do not push/upgrade but still compile and serve .json contracts from file system.
+        if (!disabled) {
           // push new code into local blockchain
           await exec(`${command} push --network ${network}`, execOptions);
           // update a proxy contract
           await exec(`${command} update ${contractName} --network ${network}`, execOptions);
-        } finally {
-          // release the lock
-          isZeppelinBusy = false;
+        } else {
+          await exec(`${command} compile`, execOptions);
         }
-      } else {
-        callback(new Error(`${oz} is required to support solidity hot-loading. Please run "npm install ${oz}", or disable hot-loading.`), '{}');
-        // return because if zos not installed we should fail
-        return;
+      } finally {
+        // release the lock
+        isZeppelinBusy = false;
       }
+    } else {
+      callback(new Error(`${oz} is required to support solidity hot-loading. Please run "npm i -D ${oz}", or disable hot-loading.`), '{}');
+      // return because if zos not installed we should fail
+      return;
     }
 
     // check if compiled contract exists
