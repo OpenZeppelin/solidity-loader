@@ -1,4 +1,4 @@
-# zeppelin-solidity-hot-loader
+# openzeppelin-loader
 Works well with [ZepKit](https://github.com/zeppelinos/zepkit) and [ZeppelinOS](https://github.com/zeppelinos).
 #### Features
 * Allows to import .sol files directly into source code.
@@ -26,7 +26,7 @@ Wallet = require("../../contracts/Wallet.sol");
     use: [
     { loader: 'json-loader' },
     {
-        loader: 'zeppelin-solidity-hot-loader',
+        loader: 'openzeppelin-loader',
         options: {
             network: 'development',
             disabled: false,
