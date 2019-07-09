@@ -1,5 +1,5 @@
 {
-  "name": "solidity-loaader",
+  "name": "openzeppelin-loader",
   "version": "1.4.4",
   "description": "Webpack Solidity Hot Loader",
   "main": "index.js",
