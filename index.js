@@ -15,7 +15,7 @@ const { getConfig, getLocalDependencies } = require('./lib/truffle');
 // Lock to prevent race conditions
 let isZeppelinBusy = false;
 
-const oz = 'zos';
+const oz = 'oz';
 
 module.exports = async function loader(source) {
   const callback = this.async();
@@ -55,7 +55,7 @@ module.exports = async function loader(source) {
           env: {
             ...process.env,
             // disable an interactive in ZeppelinOS by setting env variable to prevent blocking
-            ZOS_NON_INTERACTIVE: 'FULL',
+            OPENZEPPELIN_NON_INTERACTIVE: 'FULL',
           },
         };
 
