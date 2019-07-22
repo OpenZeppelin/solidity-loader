@@ -1,6 +1,6 @@
 {
-  "name": "openzeppelin-loader",
-  "version": "1.4.4",
+  "name": "@openzeppelin/solidity-loader",
+  "version": "1.4.5",
   "description": "Webpack Solidity Hot Loader",
   "main": "index.js",
   "scripts": {
@@ -8,19 +8,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OpenZeppelin/openzeppelin-loader.git"
+    "url": "git+https://github.com/OpenZeppelin/solidity-loader.git"
   },
   "keywords": [
-    "zeppelinos",
+    "openzeppelin",
+    "openzeppelin-sdk",
     "solidity",
-    "zepkit"
+    "ethereum",
+    "smart-contracts",
+    "solidity-loader"
   ],
   "author": "Igor Yalovoy <to@ylv.io>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/OpenZeppelin/openzeppelin-loader/issues"
+    "url": "https://github.com/OpenZeppelin/solidity-loader/issues"
   },
-  "homepage": "https://github.com/OpenZeppelin/openzeppelin-loader#readme",
+  "homepage": "https://github.com/OpenZeppelin/solidity-loader#readme",
   "dependencies": {
     "array-flatten": "^2.1.2",
     "find-up": "^3.0.0",
