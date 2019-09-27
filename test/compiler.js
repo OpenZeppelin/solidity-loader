@@ -11,16 +11,17 @@ export default (fixture, options = {}) => {
       filename: 'bundle.js',
     },
     module: {
-      rules: [{
-        test: /\.sol$/,
-        use: [
-          { loader: 'json-loader' },
-          {
-            loader: path.resolve(__dirname, '../index.js'),
-            options,
-          },
-        ],
-      },
+      rules: [
+        {
+          test: /\.sol$/,
+          use: [
+            { loader: 'json-loader' },
+            {
+              loader: path.resolve(__dirname, '../index.js'),
+              options,
+            },
+          ],
+        },
       ],
     },
   });

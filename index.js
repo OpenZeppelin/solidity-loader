@@ -4,11 +4,7 @@ const { pathExists } = require('fs-extra');
 const { getOptions, parseQuery } = require('loader-utils');
 
 const {
-  exec,
-  readFile,
-  wait,
-  packageExist,
-  which,
+  exec, readFile, wait, packageExist, which,
 } = require('./lib/util');
 const { getConfig, getLocalDependencies } = require('./lib/truffle');
 
@@ -24,7 +20,7 @@ module.exports = async function loader(source) {
   try {
     const params = parseQuery(this.resourceQuery || '?');
     const options = getOptions(this);
-    const network = (options && options.network) ? options.network : 'development';
+    const network = options && options.network ? options.network : 'development';
     const disabled = options && options.disabled;
     const contractFolderPath = this.context;
     const cwd = path.resolve(contractFolderPath, '..');
@@ -32,7 +28,8 @@ module.exports = async function loader(source) {
     const config = await getConfig({ network, cwd });
     const contractsBuildDirectory = config.contracts_build_directory;
     const contractFileName = path.basename(contractFilePath);
-    const contractName = params.contract || contractFileName.charAt(0).toUpperCase() + contractFileName.slice(1, contractFileName.length - 4);
+    const contractName = params.contract
+      || contractFileName.charAt(0).toUpperCase() + contractFileName.slice(1, contractFileName.length - 4);
     const compiledContractPath = path.resolve(contractsBuildDirectory, `${contractName}.json`);
 
     // check if compiled contract exists
@@ -78,7 +75,12 @@ module.exports = async function loader(source) {
         isZeppelinBusy = false;
       }
     } else {
-      callback(new Error(`${oz} is required to support solidity hot-loading. Please run "npm i -D ${oz}", or disable hot-loading.`), '{}');
+      callback(
+        new Error(
+          `${oz} is required to support solidity hot-loading. Please run "npm i -D ${oz}", or disable hot-loading.`,
+        ),
+        '{}',
+      );
       // return because if zos not installed we should fail
       return;
     }
@@ -95,7 +97,10 @@ module.exports = async function loader(source) {
       // return result to webpack
       callback(null, solJSON);
     } else {
-      callback(new Error(`The contract '${compiledContractPath}' doesn't exist. Try to compile your contracts first.`), '{}');
+      callback(
+        new Error(`The contract '${compiledContractPath}' doesn't exist. Try to compile your contracts first.`),
+        '{}',
+      );
     }
   } catch (e) {
     // report error here, because configuration seems to be lacking
