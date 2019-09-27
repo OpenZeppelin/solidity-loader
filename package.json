@@ -4,7 +4,22 @@
   "description": "Webpack Solidity Hot Loader",
   "main": "index.js",
   "scripts": {
-    "test": "jest --runInBand --detectOpenHandles"
+    "test": "jest --runInBand --detectOpenHandles",
+    "pre-push": "npm run test",
+    "pre-commit": "lint-staged"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run pre-push",
+      "pre-commit": "npm run pre-commit"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "eslint --fix",
+      "git add"
+    ]
   },
   "repository": {
     "type": "git",
@@ -41,10 +56,15 @@
     "babel-preset-env": "^1.7.0",
     "eslint": "^5.14.1",
     "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^6.3.0",
     "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "husky": "^3.0.5",
     "jest": "^24.8.0",
     "json-loader": "^0.5.7",
+    "lint-staged": "^9.4.0",
     "memory-fs": "^0.4.1",
+    "prettier": "^1.18.2",
     "require-from-string": "^2.0.2",
     "webpack": "^4.29.5"
   }
