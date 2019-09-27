@@ -13,8 +13,6 @@ module.exports = {
     'no-constant-condition': 0,
     'max-len': 0,
     'no-console': 0,
-    'no-nested-ternary': 0,
-    'no-unused-vars': 0,
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
     'import/prefer-default-export': 0,
     'security/no-block-members': 0,

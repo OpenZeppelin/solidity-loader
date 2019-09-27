@@ -13,11 +13,6 @@ const defaultOptions = {
   disabled: false,
 };
 
-const wrongOptions = {
-  network: 'dev',
-  disabled: false,
-};
-
 const disabledOptions = {
   network: 'development',
   disabled: true,
@@ -101,8 +96,8 @@ describe('Hot Loader', () => {
 
   describe('with oz not installed either globally or locally', () => {
     beforeAll(() => {
-      util.which.sync.mockImplementation(pckg => null);
-      util.packageExist.mockImplementation((pckg, dir) => Promise.resolve(false));
+      util.which.sync.mockImplementation(() => null);
+      util.packageExist.mockImplementation(() => Promise.resolve(false));
     });
 
     test('throws an error', async (done) => {
@@ -118,8 +113,8 @@ describe('Hot Loader', () => {
 
   describe('with only global oz installed', () => {
     beforeAll(() => {
-      util.which.sync.mockImplementation(pckg => 'oz');
-      util.packageExist.mockImplementation((pckg, dir) => Promise.resolve(''));
+      util.which.sync.mockImplementation(() => 'oz');
+      util.packageExist.mockImplementation(() => Promise.resolve(''));
     });
 
     coreTests('oz');
@@ -127,8 +122,8 @@ describe('Hot Loader', () => {
 
   describe('with local oz installed', () => {
     beforeAll(() => {
-      util.packageExist.mockImplementation((pckg, dir) => Promise.resolve('node_modules/.bin/oz'));
-      util.which.sync.mockImplementation(pckg => null);
+      util.packageExist.mockImplementation(() => Promise.resolve('node_modules/.bin/oz'));
+      util.which.sync.mockImplementation(() => null);
     });
 
     coreTests("'node_modules/.bin/oz'");

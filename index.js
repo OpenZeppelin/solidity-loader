@@ -13,7 +13,7 @@ let isZeppelinBusy = false;
 
 const oz = 'oz';
 
-module.exports = async function loader(source) {
+module.exports = async function loader() {
   const callback = this.async();
   const addDependency = this.addDependency;
 
