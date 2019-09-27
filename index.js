@@ -29,7 +29,8 @@ module.exports = async function loader() {
     const contractsBuildDirectory = config.contracts_build_directory;
     const contractFileName = path.basename(contractFilePath);
     const contractName = params.contract
-      || contractFileName.charAt(0).toUpperCase() + contractFileName.slice(1, contractFileName.length - 4);
+      || contractFileName.charAt(0).toUpperCase()
+        + contractFileName.slice(1, contractFileName.length - 4);
     const compiledContractPath = path.resolve(contractsBuildDirectory, `${contractName}.json`);
 
     // check if compiled contract exists
@@ -60,7 +61,8 @@ module.exports = async function loader() {
         // single quotes around local zos are needed because local path may have spaces
         const command = localPath ? `'${localPath}'` : oz;
 
-        // if loader is disabled do not push/upgrade but still compile and serve .json contracts from file system.
+        // if loader is disabled do not push/upgrade
+        // but still compile and serve .json contracts from file system.
         if (!disabled) {
           // push new code into local blockchain
           await exec(`${command} push --network ${network}`, execOptions);
@@ -89,7 +91,11 @@ module.exports = async function loader() {
       // read JSON contract produced by compile and return it
       const solJSON = await readFile(compiledContractPath, 'utf8');
       // get all contract's local dependencies
-      const deps = await getLocalDependencies(contractName, contractsBuildDirectory, contractFolderPath);
+      const deps = await getLocalDependencies(
+        contractName,
+        contractsBuildDirectory,
+        contractFolderPath,
+      );
       // add these imports as dependencies for a contract
       deps.map(imp => addDependency(imp));
       // add the json file as dependency
@@ -98,7 +104,9 @@ module.exports = async function loader() {
       callback(null, solJSON);
     } else {
       callback(
-        new Error(`The contract '${compiledContractPath}' doesn't exist. Try to compile your contracts first.`),
+        new Error(
+          `The contract '${compiledContractPath}' doesn't exist. Try to compile your contracts first.`,
+        ),
         '{}',
       );
     }

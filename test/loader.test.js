@@ -57,7 +57,10 @@ describe('Hot Loader', () => {
       const { network } = defaultOptions;
       await execute(defaultOptions, contractFilePath, contractName);
       expect(util.exec).toHaveBeenCalledTimes(2);
-      expect(util.exec).toHaveBeenCalledWith(`${command} update ${contractName} --network ${network}`, execOptions);
+      expect(util.exec).toHaveBeenCalledWith(
+        `${command} update ${contractName} --network ${network}`,
+        execOptions,
+      );
       expect(util.exec).toHaveBeenCalledWith(`${command} push --network ${network}`, execOptions);
       done();
     });
@@ -67,7 +70,10 @@ describe('Hot Loader', () => {
       const contractName = 'Counter';
       await execute(defaultOptions, `${contractFilePath}?contract=${contractName}`, contractName);
       expect(util.exec).toHaveBeenCalledTimes(2);
-      expect(util.exec).toHaveBeenCalledWith(`${command} update ${contractName} --network ${network}`, execOptions);
+      expect(util.exec).toHaveBeenCalledWith(
+        `${command} update ${contractName} --network ${network}`,
+        execOptions,
+      );
       expect(util.exec).toHaveBeenCalledWith(`${command} push --network ${network}`, execOptions);
       done();
     });
@@ -81,14 +87,22 @@ describe('Hot Loader', () => {
 
     test('Discovers parent contracts as dependencies', async (done) => {
       const ret = ['B.sol', 'Base.sol'];
-      const deps = await getLocalDependencies('C', path.resolve(contractsBuildDir), path.resolve(contractsDir));
+      const deps = await getLocalDependencies(
+        'C',
+        path.resolve(contractsBuildDir),
+        path.resolve(contractsDir),
+      );
       expect(deps.length).toEqual(2);
       expect(deps.map(dep => path.basename(dep))).toEqual(ret);
       done();
     });
 
     test('Discovers parent contracts as dependencies for contract inside one .sol file with many contracts', async (done) => {
-      const deps = await getLocalDependencies('Contract', path.resolve(contractsBuildDir), path.resolve(contractsDir));
+      const deps = await getLocalDependencies(
+        'Contract',
+        path.resolve(contractsBuildDir),
+        path.resolve(contractsDir),
+      );
       expect(deps.length).toEqual(0);
       done();
     });

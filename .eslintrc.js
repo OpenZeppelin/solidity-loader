@@ -11,8 +11,6 @@ module.exports = {
     'no-underscore-dangle': 0,
     'no-await-in-loop': 0,
     'no-constant-condition': 0,
-    'max-len': 0,
-    'no-console': 0,
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
     'import/prefer-default-export': 0,
     'security/no-block-members': 0,
