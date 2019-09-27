@@ -15,7 +15,7 @@ const oz = 'oz';
 
 module.exports = async function loader() {
   const callback = this.async();
-  const addDependency = this.addDependency;
+  const { addDependency } = this;
 
   try {
     const params = parseQuery(this.resourceQuery || '?');
