@@ -43,6 +43,7 @@ module.exports = async function loader() {
     // if not installed at all do nothing
     if (localPath || globalPath) {
       // wait until compile/push/update is done
+      // eslint-disable-next-line no-await-in-loop
       while (isZeppelinBusy) await wait(500);
 
       isZeppelinBusy = true;
