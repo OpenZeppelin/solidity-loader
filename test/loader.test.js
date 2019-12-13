@@ -3,7 +3,7 @@ import requireFromString from 'require-from-string';
 
 import compiler from './compiler';
 
-import { getLocalDependencies } from '../lib/truffle';
+import { getLocalDependencies } from '../lib/deps';
 
 // because we want to mock loader
 const util = require('../lib/util');

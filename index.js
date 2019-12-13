@@ -6,7 +6,7 @@ const { getOptions, parseQuery } = require('loader-utils');
 const {
   exec, readFile, wait, packageExist, which,
 } = require('./lib/util');
-const { getLocalDependencies } = require('./lib/truffle');
+const { getLocalDependencies } = require('./lib/deps');
 const { getConfig } = require('./lib/config');
 
 // Lock to prevent race conditions
