@@ -7,7 +7,7 @@ const {
   exec, readFile, wait, packageExist, which,
 } = require('./lib/util');
 const { getLocalDependencies } = require('./lib/deps');
-const { getConfig } = require('./lib/config');
+const { getBuildDir } = require('./lib/config');
 
 // Lock to prevent race conditions
 let isZeppelinBusy = false;
@@ -26,8 +26,7 @@ module.exports = async function loader() {
     const contractFolderPath = this.context;
     const cwd = path.resolve(contractFolderPath, '..');
     const contractFilePath = this.resourcePath;
-    const config = await getConfig({ network, cwd });
-    const contractsBuildDirectory = config.contracts_build_directory;
+    const contractsBuildDirectory = await getBuildDir({ network, cwd });
     const contractFileName = path.basename(contractFilePath);
     const contractName = params.contract
       || contractFileName.charAt(0).toUpperCase()
