@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs-extra';
 import requireFromString from 'require-from-string';
 
 import compiler from './compiler';
@@ -18,11 +19,16 @@ const disabledOptions = {
   disabled: true,
 };
 
-const contractsDir = './test/data/contracts/';
-const contractsBuildDir = './test/data/build/';
-const contractFilePath = './data/contracts/Contract.sol';
+const projectDir = './test/project/';
+const networksConfigBlueprint = `${projectDir}blueprint-networks.js`;
+const networksConfig = `${projectDir}networks.js`;
+const truffleConfigBlueprint = `${projectDir}blueprint-truffle-config.js`;
+const truffleConfig = `${projectDir}truffle-config.js`;
+const contractsDir = `${projectDir}contracts/`;
+const contractsBuildDir = `${projectDir}build/`;
+const contractFilePath = './project/contracts/Contract.sol';
 const execOptions = {
-  cwd: path.resolve(__dirname, 'data'),
+  cwd: path.resolve(__dirname, 'project'),
   env: {
     ...process.env,
     // disable an interactive in OpenZeppelin SDK by setting env variable to prevent blocking
@@ -51,95 +57,121 @@ describe('Hot Loader', () => {
     jest.clearAllMocks();
   });
 
-  const coreTests = (command) => {
-    test('Runs truffle compile, oz push, and oz update commands to produce fresh .json files', async (done) => {
-      const contractName = 'Contract';
-      const { network } = defaultOptions;
-      await execute(defaultOptions, contractFilePath, contractName);
-      expect(util.exec).toHaveBeenCalledTimes(2);
-      expect(util.exec).toHaveBeenCalledWith(
-        `${command} update ${contractName} --network ${network}`,
-        execOptions,
-      );
-      expect(util.exec).toHaveBeenCalledWith(`${command} push --network ${network}`, execOptions);
-      done();
+  const runAllTests = () => {
+    const coreTests = (command) => {
+      test('Runs truffle compile, oz push, and oz update commands to produce fresh .json files', async (done) => {
+        const contractName = 'Contract';
+        const { network } = defaultOptions;
+        await execute(defaultOptions, contractFilePath, contractName);
+        expect(util.exec).toHaveBeenCalledTimes(2);
+        expect(util.exec).toHaveBeenCalledWith(
+          `${command} update ${contractName} --network ${network}`,
+          execOptions,
+        );
+        expect(util.exec).toHaveBeenCalledWith(`${command} push --network ${network}`, execOptions);
+        done();
+      });
+
+      test('Runs truffle compile, oz push, and oz update commands to produce fresh .json files with contract not being the same as filename', async (done) => {
+        const { network } = defaultOptions;
+        const contractName = 'Counter';
+        await execute(defaultOptions, `${contractFilePath}?contract=${contractName}`, contractName);
+        expect(util.exec).toHaveBeenCalledTimes(2);
+        expect(util.exec).toHaveBeenCalledWith(
+          `${command} update ${contractName} --network ${network}`,
+          execOptions,
+        );
+        expect(util.exec).toHaveBeenCalledWith(`${command} push --network ${network}`, execOptions);
+        done();
+      });
+
+      test('Serves json files from file system while disabled', async (done) => {
+        const contractName = 'Contract';
+        await execute(disabledOptions, contractFilePath, contractName);
+        expect(util.exec).toHaveBeenCalledTimes(0);
+        done();
+      });
+
+      test('Discovers parent contracts as dependencies', async (done) => {
+        const ret = ['B.sol', 'Base.sol'];
+        const deps = await getLocalDependencies(
+          'C',
+          path.resolve(contractsBuildDir),
+          path.resolve(contractsDir),
+        );
+        expect(deps.length).toEqual(2);
+        expect(deps.map(dep => path.basename(dep))).toEqual(ret);
+        done();
+      });
+
+      test('Discovers parent contracts as dependencies for contract inside one .sol file with many contracts', async (done) => {
+        const deps = await getLocalDependencies(
+          'Contract',
+          path.resolve(contractsBuildDir),
+          path.resolve(contractsDir),
+        );
+        expect(deps.length).toEqual(0);
+        done();
+      });
+    };
+
+    describe('with oz not installed either globally or locally', () => {
+      beforeAll(() => {
+        util.which.sync.mockImplementation(() => null);
+        util.packageExist.mockImplementation(() => Promise.resolve(false));
+      });
+
+      test('throws an error', async (done) => {
+        const contractName = 'Contract';
+        try {
+          await execute(disabledOptions, contractFilePath, contractName);
+        } catch (e) {
+          expect(e).toBeNull();
+        }
+        done();
+      });
     });
 
-    test('Runs truffle compile, oz push, and oz update commands to produce fresh .json files with contract not being the same as filename', async (done) => {
-      const { network } = defaultOptions;
-      const contractName = 'Counter';
-      await execute(defaultOptions, `${contractFilePath}?contract=${contractName}`, contractName);
-      expect(util.exec).toHaveBeenCalledTimes(2);
-      expect(util.exec).toHaveBeenCalledWith(
-        `${command} update ${contractName} --network ${network}`,
-        execOptions,
-      );
-      expect(util.exec).toHaveBeenCalledWith(`${command} push --network ${network}`, execOptions);
-      done();
+    describe('with only global oz installed', () => {
+      beforeAll(() => {
+        util.which.sync.mockImplementation(() => 'oz');
+        util.packageExist.mockImplementation(() => Promise.resolve(''));
+      });
+
+      coreTests('oz');
     });
 
-    test('Serves json files from file system while disabled', async (done) => {
-      const contractName = 'Contract';
-      await execute(disabledOptions, contractFilePath, contractName);
-      expect(util.exec).toHaveBeenCalledTimes(0);
-      done();
-    });
+    describe('with local oz installed', () => {
+      beforeAll(() => {
+        util.packageExist.mockImplementation(() => Promise.resolve('node_modules/.bin/oz'));
+        util.which.sync.mockImplementation(() => null);
+      });
 
-    test('Discovers parent contracts as dependencies', async (done) => {
-      const ret = ['B.sol', 'Base.sol'];
-      const deps = await getLocalDependencies(
-        'C',
-        path.resolve(contractsBuildDir),
-        path.resolve(contractsDir),
-      );
-      expect(deps.length).toEqual(2);
-      expect(deps.map(dep => path.basename(dep))).toEqual(ret);
-      done();
-    });
-
-    test('Discovers parent contracts as dependencies for contract inside one .sol file with many contracts', async (done) => {
-      const deps = await getLocalDependencies(
-        'Contract',
-        path.resolve(contractsBuildDir),
-        path.resolve(contractsDir),
-      );
-      expect(deps.length).toEqual(0);
-      done();
+      coreTests("'node_modules/.bin/oz'");
     });
   };
 
-  describe('with oz not installed either globally or locally', () => {
-    beforeAll(() => {
-      util.which.sync.mockImplementation(() => null);
-      util.packageExist.mockImplementation(() => Promise.resolve(false));
+  describe('with Truffle config', () => {
+    beforeAll(async () => {
+      await fs.copy(truffleConfigBlueprint, truffleConfig);
     });
 
-    test('throws an error', async (done) => {
-      const contractName = 'Contract';
-      try {
-        await execute(disabledOptions, contractFilePath, contractName);
-      } catch (e) {
-        expect(e).toBeNull();
-      }
-      done();
+    afterAll(async () => {
+      await fs.remove(truffleConfig);
     });
+
+    runAllTests();
   });
 
-  describe('with only global oz installed', () => {
-    beforeAll(() => {
-      util.which.sync.mockImplementation(() => 'oz');
-      util.packageExist.mockImplementation(() => Promise.resolve(''));
+  describe('with Networks.js config', () => {
+    beforeAll(async () => {
+      await fs.copy(networksConfigBlueprint, networksConfig);
     });
 
-    coreTests('oz');
-  });
-
-  describe('with local oz installed', () => {
-    beforeAll(() => {
-      util.packageExist.mockImplementation(() => Promise.resolve('node_modules/.bin/oz'));
-      util.which.sync.mockImplementation(() => null);
+    afterAll(async () => {
+      await fs.remove(networksConfig);
     });
 
-    coreTests("'node_modules/.bin/oz'");
+    runAllTests();
   });
 });

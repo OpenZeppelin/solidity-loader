@@ -1,4 +1,4 @@
 node_modules/
 .vscode
 
-test/data/build
+test/project/build
