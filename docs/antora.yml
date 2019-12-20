@@ -1,0 +1,5 @@
+name: solidity-loader
+title: Solidity Loader
+version: 1.x
+nav:
+  - modules/ROOT/nav.adoc

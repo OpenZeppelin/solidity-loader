@@ -4,9 +4,11 @@
   "description": "Webpack Solidity Hot Loader",
   "main": "index.js",
   "scripts": {
-    "test": "jest --runInBand --detectOpenHandles",
+    "docs": "oz-docs",
+    "docs:watch": "npm run docs watch",
+    "pre-commit": "lint-staged",
     "pre-push": "npm run test",
-    "pre-commit": "lint-staged"
+    "test": "jest --runInBand --detectOpenHandles"
   },
   "husky": {
     "hooks": {
@@ -65,6 +67,7 @@
     "json-loader": "^0.5.7",
     "lint-staged": "^9.4.0",
     "memory-fs": "^0.4.1",
+    "openzeppelin-docs-utils": "github:OpenZeppelin/docs-utils",
     "prettier": "^1.18.2",
     "require-from-string": "^2.0.2",
     "webpack": "^4.29.5"
