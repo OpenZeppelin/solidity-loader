@@ -1,6 +1,6 @@
 # solidity-loader
 
-Works well with [OpenZeppelin SKD](https://openzeppelin.com/sdk/) and [Starter Kit](https://openzeppelin.com/start/).
+Works well with [OpenZeppelin SDK](https://openzeppelin.com/sdk/) and [Starter Kit](https://openzeppelin.com/start/).
 
 #### Features
 
