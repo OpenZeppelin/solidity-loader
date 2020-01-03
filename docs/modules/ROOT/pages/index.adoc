@@ -1,0 +1,23 @@
+= Solidity Loader
+
+ * Allows importing .sol files directly into source code.
+ * Allows to specify contract name for .sol files, like require("Contract.sol?contract=Counter").
+ * Tracks dependencies for contracts, so children are updated when parents are modified.
+ * Converts .sol files into .json using `compile oz`, `oz push`, and `oz update`.
+ * Uses only development network so won't run on any other networks.
+ * You can set the development network name using the loader's config.
+ * Handles race conditions at Webpack pipeline using a lock.
+ * Pulls build directory from truffle config.
+ * In case oz commands are not available, uses cached versions of .json files.
+ * Reports errors to console output and dev tools.
+ * Compilation can be disabled using the loader's disabled config.
+
+== Overview
+
+=== Installation
+
+=== Usage
+
+== Learn More
+
+ * xref:getting-started.adoc[Getting Started]
