@@ -124,21 +124,24 @@ $ npx openzeppelin transfer
 ----
 
 == Use the app
-In the app, press *Increase Counter by 1* button. Confirm the transaction in MetaMask and once the transaction is confirmed the app will have the updated counter value.
+The app is a simple counter.  To increase the counter, press *Increase Counter by 1* button. Confirm the transaction in MetaMask and once the transaction is confirmed the app will have the updated counter value.
 
 == Update the Counter contract
-In an editor, modify the Counter contract to change the calculation in the `increaseCounter` function to add 3.
+If we wanted to change the Counter contract, without Solidity Hot Loader, after making the change, we would need to compile the contract, deploy the contract, restore the state and restart the app.  Instead, with Solidity Hot Loader, after making the change we just need to wait a bit and then we are done!
 
-[source,solidity]
+To see this in action, in an editor, modify the Counter contract to change the calculation in the `increaseCounter` function to add 3.
+
+[source,diff]
 ----
   function increaseCounter(uint256 amount) public {
-    count = count + 3;
+-    count = count + 1;
++    count = count + 3;
   }
 ----
 
 The Solidity Hot Loader will recompile the contract and upgrade it on the development network and update the artifacts. We can see in the terminal when it is compiling.
 
-In the app, notice that the state doesn't change. Then press *Increase Counter by 1* button. Confirm the transaction in MetaMask and once the transaction is confirmed the app will have the updated counter value. 
+In the app, notice that the value of the counter doesn't change, as the state is maintained. Then press *Increase Counter by 1* button. Confirm the transaction in MetaMask and once the transaction is confirmed the app will have the updated counter value. 
 The value should increase by 3.
 
 == Review
