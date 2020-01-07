@@ -33,6 +33,7 @@ The Solidity Hot Loader already comes installed with the Tutorial Starter Kit: a
 
 [source,diff]
 ----
+ // client/config/webpack.js
  const solidityLoaderOptions = {
    network: 'development',
    // you can stop loader from automatic compile/push/upgrade
