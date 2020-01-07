@@ -69,17 +69,17 @@ Compile the Counter contract with OpenZeppelin CLI.
 
 [source,console]
 ----
-$ npx oz compile
+$ npx openzeppelin compile
 ✓ Compiled contracts with solc 0.5.13 (commit.5b0b510c)
 ----
 
 Deploy the Counter contract to our local blockchain.
 
-Run `npx oz create` and use the interactive commands to deploy the Counter contract to the development network and initialize to a value e.g. `23`.
+Run `npx openzeppelin create` and use the interactive commands to deploy the Counter contract to the development network and initialize to a value e.g. `23`.
 
 [source,console]
 ----
-$ npx oz create
+$ npx openzeppelin create
 Nothing to compile, all contracts are up to date.
 ? Pick a contract to instantiate Counter
 ? Pick a network development
@@ -112,11 +112,11 @@ In MetaMask change your network to Localhost:8545 to connect to `ganache-cli`.
 == Fund MetaMask account
 If you need to fund your MetaMask account (e.g. it has a balance of 0 test Ether).
 
-From your project directory in another terminal, call `npx oz transfer` to transfer 0.5 (test) ether to your account in MetaMask.
+From your project directory in another terminal, call `npx openzeppelin transfer` to transfer 0.5 (test) ether to your account in MetaMask.
 
 [source,console]
 ----
-$ npx oz transfer
+$ npx openzeppelin transfer
 ? Pick a network development
 ? Choose the account to send transactions from (0) 0xF983502f33E2c9E62d0465557446B86C595C4919
 ? Enter the receiver account 0x77737a65C296012C67F8c7f656d1Df81827c9541
