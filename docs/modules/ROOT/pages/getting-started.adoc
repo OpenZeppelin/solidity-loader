@@ -145,21 +145,6 @@ The Solidity Hot Loader will recompile the contract and upgrade it on the develo
 In the app, notice that the value of the counter doesn't change, as the state is maintained. Then press *Increase Counter by 1* button. Confirm the transaction in MetaMask and once the transaction is confirmed the app will have the updated counter value. 
 The value should increase by 3.
 
-== Review
-
-Let's take a moment and review the Solidity Hot Loader development cycle: 
-
-1. Make a change to your smart contract `.sol` file and save it.
-2. Wait a bit.
-3. Done.
-
-We didn't have to manually do any of the following: 
-
-* Compile your contract. 
-* Deploy your contract.
-* Restore the state.
-* Restart dapp to get new contract.
-
-This is a big improvement to the developer experience, and allows us to develop faster using the Solidity Hot Loader.
+The Solidity Hot Loader allows us to develop smart contracts faster, improving the developer experience.
 
 NOTE: The Solidity Hot Loader under the covers uses OpenZeppelin SDK upgradeable contracts, so is limited to contracts that can be upgradeable: https://docs.openzeppelin.com/sdk/2.6/writing-contracts
