@@ -77,7 +77,6 @@ $ npx openzeppelin compile
 ✓ Compiled contracts with solc 0.5.13 (commit.5b0b510c)
 ----
 
-Deploy the Counter contract to our local blockchain.
 
 Run `npx openzeppelin create` and use the interactive commands to deploy the Counter contract to the development network and initialize to a value e.g. `23`.
 
