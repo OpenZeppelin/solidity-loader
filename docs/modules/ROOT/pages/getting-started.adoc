@@ -15,14 +15,14 @@ $ npm install -g ganache-cli
 $ ganache-cli --deterministic
 ----
 
-Next we need a project directory to develop our project in. In a separate terminal create the project directory.
+Next we need a project directory to develop our project in. In a separate terminal create the project directory:
 
 [source,console]
 ----
 $ mkdir myproject && cd myproject
 ----
 
-Unpack the Tutorial Starter Kit. (This could take a little while so maybe make a cup of tea)
+Unpack the Tutorial Starter Kit using the xref:sdk::index.adoc[*OpenZeppelin CLI*]. This could take a little while, so maybe make a cup of tea.
 
 [source,console]
 ----
@@ -39,7 +39,7 @@ $ npx openzeppelin init
 Project initialized. Write a new contract in the contracts folder and run 'openzeppelin create' to deploy it.
 ----
 
-Enable the Solidity Hot Loader in `client/config/webpack.js` by setting `disabled: false` in your favorite editor. We can disable this when we need.
+The Solidity Hot Loader already comes installed with the Tutorial Starter Kit: all we need to do is enable it. Do this by setting `disabled: false` in `client/config/webpack.js`:
 
 [source,diff]
 ----
@@ -67,8 +67,8 @@ Enable the Solidity Hot Loader in `client/config/webpack.js` by setting `disable
  };
 ----
 
-== Counter contract
-Compile the Counter contract with OpenZeppelin CLI.
+== Compiling and Deploying
+The Tutorial Starter Kit already comes with a `Counter` contract: compile it using the OpenZeppelin CLI:
 
 [source,console]
 ----
@@ -96,6 +96,7 @@ All contracts have been deployed
 ✓ Instance created at 0xCfEB869F69431e42cdB54A4F4f105C19C080A601
 0xCfEB869F69431e42cdB54A4F4f105C19C080A601
 ----
+TIP: If you're unfamiliar with using the OpenZeppelin CLI to deploy smart contracts, head to our xref:learn::deploy-and-interact.adoc#getting-started-with-the-cli[Getting Started] guide.
 
 == Using our dapp
 
