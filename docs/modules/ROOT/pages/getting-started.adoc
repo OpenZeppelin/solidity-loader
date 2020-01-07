@@ -46,6 +46,7 @@ Enable the Solidity Hot Loader in `client/config/webpack.js` by setting `disable
    // you can stop loader from automatic compile/push/upgrade
    // action by setting disabled flag to true, but it will still
    // serve .json files from file system
+-  disabled: true,
 +  disabled: false,
  };
 
