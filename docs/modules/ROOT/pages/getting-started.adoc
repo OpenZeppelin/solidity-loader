@@ -95,7 +95,8 @@ All contracts have been deployed
 ----
 
 == App
-We will now start the app.
+
+We are now ready to start the dapp!
 
 [source,console]
 ----
