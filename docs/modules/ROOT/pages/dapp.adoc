@@ -1,12 +1,12 @@
-= Building a dapp with Solidity Hot Loader
+= Building a Dapp with Solidity Hot Loader
 
 == Introduction
 
-In this guide, we will build a simple dapp using the Solidity Hot Loader. We will create a Counter dapp, which displays the value of a Counter that can be increased. We will update the code in the smart contract to show the power of the Solidity Hot Loader.
+In this guide, we will build a simple Dapp using the Solidity Hot Loader. We will create a Counter Dapp, which displays the value of a Counter that can be increased. We will update the code in the smart contract to show the power of the Solidity Hot Loader to automatically update the Dapp.
 
 == Setup
 
-We will use the `create-react-app` package to bootstrap a React application.
+We will use the https://create-react-app.dev/[`create-react-app`] package to bootstrap a React application.
 
 First we need a local blockchain to develop on. We use `ganache-cli`, so go ahead and install (if you haven’t already) and then run a local blockchain using `ganache-cli`.
 
@@ -16,9 +16,7 @@ $ npm install -g ganache-cli
 $ ganache-cli --deterministic
 ----
 
-Next we need a project directory to develop our project in. In a
-separate terminal create the project directory and create `package.json`
-with `npm init`.
+Next we need a project directory to develop our project in. In a separate terminal create the project directory and create `package.json` with `npm init`.
 
 [source,console]
 ----
@@ -82,8 +80,7 @@ All contracts have been deployed
 ----
 
 == Creating the dapp
-We will create our dapp using the `create-react-app` package, which
-bootstraps a simple client-side application using React.
+We will create our dapp using the `create-react-app` package, which bootstraps a simple client-side application using React.
 
 [source,console]
 ----
@@ -91,23 +88,16 @@ $ npx create-react-app client
 ----
 
 == Setup Solidity Hot Loader
-Now that the directories for our dapp have been created, we can install Solidity Hot Loader. In the `client` directory install *Solidity Hot Loader*
+Now that the directories for our dapp have been created, we can install Solidity Hot Loader. In the `client` directory install *Solidity Hot Loader* and `json-loader`.
 
 [source,console]
 ----
-$ npm install @openzeppelin/solidity-loader
+$ npm install @openzeppelin/solidity-loader json-loader
 ----
 
-The Solidity Hot Loader uses `json-loader` so we should go ahead and install that too.
+Next up, we configure Solidity Hot Loader and set it to enabled. To stop the Solidity Hot Loader automagically updating our contracts, set disabled to `true`.
 
-[source,console]
-----
-$ npm install json-loader
-----
-
-Next up, we configure Solidity Hot Loader and set it to enabled. To stop the Solidity Hot Loader automagically updating our contracts, set disabled to true.
-
-In the `client` directory create a `config` directory. In the `config` directory create a `webpack.js` file with the following code, notice that we are starting with the Solidity Hot Loader enabled (`disabled: false`):
+In the `client` directory create a `config` directory. In the `config` directory create a `webpack.js` file for the Solidity Hot Loader webpack rule with the following code, notice that we are starting with the Solidity Hot Loader enabled (`disabled: false`):
 
 [source,javascript]
 ----
@@ -134,9 +124,7 @@ module.exports = {
 };
 ----
 
-We now add in the Solidity Hot Loader to webpack.
-
-In the `client` directory create a `config-overrides.js` file with the following code:
+We now add in the Solidity Hot Loader to webpack.  In the `client` directory create a `config-overrides.js` file with the following code:
 
 [source,javascript]
 ----
@@ -160,7 +148,7 @@ module.exports = function override(config, env) {
 };
 ----
 
-In this guide we use `react-app-rewired` to rewire `create-react-app` webpack configs to add in the Solidity Hot Loader without ejecting.
+In this guide we use https://github.com/timarney/react-app-rewired[`react-app-rewired`] to rewire `create-react-app` webpack configs to add in the Solidity Hot Loader without ejecting from `create-react-app`.
 
 In the `client` directory, install `react-app-rewired`
 
@@ -169,11 +157,7 @@ In the `client` directory, install `react-app-rewired`
 $ npm i react-app-rewired
 ----
 
-To use `react-app-rewired`, we now need to change the `package.json`
-scripts.
-
-In `package.json` in the `client` directory, update the scripts to use
-`react-app-rewired` so that they looks as follows:
+To use `react-app-rewired`, we now need to change the `package.json` scripts.  In `package.json` in the `client` directory, update the scripts to use `react-app-rewired` so that they looks as follows:
 
 [source,javascript]
 ----
@@ -187,20 +171,13 @@ In `package.json` in the `client` directory, update the scripts to use
 
 == Add the dapp code
 
-We will use https://github.com/OpenZeppelin/openzeppelin-network.js[OpenZeppelin
-Network.js] to access the Web3 provider. *OpenZeppelin Network.js* is an easy to use and reliable library that provides one line access to the web3 API. It can be used in both React and in (vanilla) JavaScript. It also supports the Gas Station Network.
+We will use https://github.com/OpenZeppelin/openzeppelin-network.js[OpenZeppelin Network.js] to access the Web3 provider. *OpenZeppelin Network.js* is an easy to use and reliable library that provides one line access to the web3 API. It can be used in both React and in (vanilla) JavaScript. It also supports the Gas Station Network.
 
-First we change to the `client` directory.
+First we change to the `client` directory.  Then, install *OpenZeppelin Network.js*
 
 [source,console]
 ----
 $ cd client
-----
-
-Then, install *OpenZeppelin Network.js*
-
-[source,console]
-----
 $ npm install @openzeppelin/network 
 ----
 
@@ -336,27 +313,24 @@ We can now fire up our application running `npm start` from within the `client` 
 $ npm start
 ----
 
-Our dapp that we created will display in the browser `https://localhost:3000`
-
-With our dapp loaded in the browser, we can increase the value of the counter.
+Our dapp that we created will display in the browser (`https://localhost:3000`).  With our dapp loaded in the browser, we can increase the value of the counter.
 
 == Solidity Hot Loader in action
 We can now make changes to our contract and this will be reflected in the dapp using the Solidity Hot Loader.
 
 In `Counter.sol` change the value that the counter is increased by from 1 to 3.
 
-[source,solidity]
+[source,diff]
 ----
   function increase() public {
-    value = value + 3;
+-    value = value + 1;
++    value = value + 3;
   }
 ----
 
-Save the change in `Counter.sol` and Solidity Hot Loader will compile the contract, upgrade it and refresh the dapp.
+Save the change in `Counter.sol` and Solidity Hot Loader will automatically compile the contract, upgrade it and refresh the dapp.
 
 Press the `Increase Counter` button and once the transaction in confirmed the counter will have increased by 3.
-
-'''''
 
 We can keep developing our smart contract and Solidity Hot Loader will update our dapp.
 
