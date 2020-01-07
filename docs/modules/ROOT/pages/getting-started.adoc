@@ -29,16 +29,6 @@ Unpack the Tutorial Starter Kit using the xref:sdk::index.adoc[*OpenZeppelin CLI
 $ npx @openzeppelin/cli unpack tutorial
 ----
 
-Initialize the project with OpenZeppelin.
-
-[source,console]
-----
-$ npx openzeppelin init
-? Welcome to the OpenZeppelin SDK! Choose a name for your project myproject
-? Initial project version 1.0.2
-Project initialized. Write a new contract in the contracts folder and run 'openzeppelin create' to deploy it.
-----
-
 The Solidity Hot Loader already comes installed with the Tutorial Starter Kit: all we need to do is enable it. Do this by setting `disabled: false` in `client/config/webpack.js`:
 
 [source,diff]
@@ -68,6 +58,16 @@ The Solidity Hot Loader already comes installed with the Tutorial Starter Kit: a
 ----
 
 == Compiling and Deploying
+Initialize the project with OpenZeppelin.
+
+[source,console]
+----
+$ npx openzeppelin init
+? Welcome to the OpenZeppelin SDK! Choose a name for your project myproject
+? Initial project version 1.0.2
+Project initialized. Write a new contract in the contracts folder and run 'openzeppelin create' to deploy it.
+----
+
 The Tutorial Starter Kit already comes with a `Counter` contract: compile it using the OpenZeppelin CLI:
 
 [source,console]
