@@ -7,7 +7,7 @@ The easiest way to get started using Solidity Hot Loader is using a xref:starter
 This Kit includes a Counter dapp, which displays the value of a Counter that can be increased and decreased: we will make changes to the code of the smart contract to show the power of the Solidity Hot Loader.
 
 == Setup
-First we need a local blockchain to develop on. We use `ganache-cli`, so go ahead and install (if you haven't already) and then run a local blockchain using `ganache-cli`
+First we need a xref:learn::deploy-and-interact.adoc#local-blockchain[local blockchain] to develop on. We will use `ganache-cli`, so go ahead and install (if you haven't already) and then run a local blockchain using `ganache-cli`
 
 [source,console]
 ----
