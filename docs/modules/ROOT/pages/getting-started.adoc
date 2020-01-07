@@ -77,8 +77,7 @@ $ npx openzeppelin compile
 ✓ Compiled contracts with solc 0.5.13 (commit.5b0b510c)
 ----
 
-
-Run `npx openzeppelin create` and use the interactive commands to deploy the Counter contract to the development network and initialize to a value e.g. `23`.
+We will now deploy `Counter` to our local ganache blockchain. Run `npx openzeppelin create` and use the interactive commands to deploy the `Counter` contract to the development network, calling `initialize` with a numeric value (here we use '23'):
 
 [source,console]
 ----
