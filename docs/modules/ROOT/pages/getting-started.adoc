@@ -104,9 +104,7 @@ $ cd client
 $ npm run start
 ----
 
-The app will open in a browser on http://localhost:3000/
-
-Click on Counter to go to http://localhost:3000/counter
+The app will open in a browser (http://localhost:3000).  Click on Counter to go to http://localhost:3000/counter
 
 In MetaMask change your network to Localhost:8545 to connect to `ganache-cli`.
 
