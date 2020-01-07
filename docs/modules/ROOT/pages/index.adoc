@@ -1,19 +1,5 @@
 = Solidity Loader
 
- * Allows importing `.sol` files directly into source code.
- * Allows specifying the contract name for `.sol` files, like `require("Contract.sol?contract=Counter")`.
- * Tracks dependencies for contracts, so children are updated when parents are modified.
- * Converts `.sol` files into `.json` using `oz compile` and `oz update`.
- * Uses the `development` network only, so won't run on any other networks.
- * Set the development network name using the loader's config.
- * Handles race conditions at Webpack pipeline using a lock.
- * Pulls build directory from config.
- * In case `openzeppelin` commands are not available, uses cached versions of `.json` files.
- * Reports errors to console output and dev tools.
- * Compilation can be disabled using the loader's disabled config.
-
-== Overview
-
 Solidity Hot Loader is a webpack loader that watches the smart contract `.sol` files you’re using. Once there’s a change, it compiles them, updates the local blockchain using the https://openzeppelin.com/sdk/[OpenZeppelin SDK], and refreshes your app in the browser while preserving your blockchain state. Compare this against the existing Solidity development cycle.
 
 The Solidity Hot Loader development cycle:
@@ -29,6 +15,20 @@ The existing (slow) Solidity development cycle:
 3.  Deploy your contract.
 4.  Restore the state.
 5.  Restart dapp to get new contract.
+
+ * Allows importing `.sol` files directly into source code.
+ * Allows specifying the contract name for `.sol` files, like `require("Contract.sol?contract=Counter")`.
+ * Tracks dependencies for contracts, so children are updated when parents are modified.
+ * Converts `.sol` files into `.json` using `oz compile` and `oz update`.
+ * Uses the `development` network only, so won't run on any other networks.
+ * Set the development network name using the loader's config.
+ * Handles race conditions at Webpack pipeline using a lock.
+ * Pulls build directory from config.
+ * In case `openzeppelin` commands are not available, uses cached versions of `.json` files.
+ * Reports errors to console output and dev tools.
+ * Compilation can be disabled using the loader's disabled config.
+
+== Overview
 
 === Installation
 
