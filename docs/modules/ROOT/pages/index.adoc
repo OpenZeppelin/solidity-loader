@@ -22,12 +22,12 @@ The existing (slow) Solidity development cycle:
 
 [source,console]
 ----
-$ npm install @openzeppelin/solidity-loader
+$ npm install @openzeppelin/solidity-loader json-loader
 ----
 
 === Usage
 
-Webpack configuration for Solidity Hot Loader:
+Add the following https://webpack.js.org/configuration/module/#rule[rule] into your webpack configuration:
 [source,javascript]
 ----
 solidityLoader: {
@@ -45,11 +45,15 @@ solidityLoader: {
 }
 ----
 
-Example of importing Solidity file into JavaScript:
+NOTE: If you are using `create-react-app`, you may need to either eject the application to modify the webpack configuration, or use https://github.com/timarney/react-app-rewired[`react-app-rewired`].
+
+Import your Solidity contracts into JavaScript like this:
 [source,javascript]
 ----
 counterJSON = require('../../contracts/Counter.sol');
 ----
+
+Changes to your contracts in development will now hot load! ✨
 
 == Learn More
 
