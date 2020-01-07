@@ -60,4 +60,4 @@ Changes to your contracts in development will now hot load! ✨
  * Check out xref:getting-started.adoc[Getting Started] if you're new to the Solidity Loader
  * Watch our Devcon V https://youtu.be/KU6_r3sJ2E4[Delightful Developer Experience] presentation, by Igor Yalovoy.
 Igor Yalovoy.
- * Finally check out xref:dapp.adoc[Building a dapp with Solidity Hot Loader].
+ * For a step-by-step guide, head to xref:dapp.adoc[Building a Dapp with Solidity Hot Loader].
