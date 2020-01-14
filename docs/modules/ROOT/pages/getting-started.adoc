@@ -95,7 +95,7 @@ All contracts have been deployed
 ✓ Instance created at 0xCfEB869F69431e42cdB54A4F4f105C19C080A601
 0xCfEB869F69431e42cdB54A4F4f105C19C080A601
 ----
-TIP: If you're unfamiliar with using the OpenZeppelin CLI to deploy smart contracts, head to our xref:learn::deploy-and-interact.adoc#getting-started-with-the-cli[Getting Started] guide.
+TIP: If you're unfamiliar with using the OpenZeppelin CLI to deploy smart contracts, head to our xref:learn::deploying-and-interacting.adoc#getting-started-with-the-cli[Getting Started] guide.
 
 == Using our dapp
 
