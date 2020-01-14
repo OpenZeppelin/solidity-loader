@@ -93,7 +93,7 @@ Now that the directories for our dapp have been created, we can install Solidity
 $ npm install @openzeppelin/solidity-loader json-loader
 ----
 
-Next up, we configure Solidity Hot Loader and set it to enabled. To stop the Solidity Hot Loader automagically updating our contracts, set disabled to `true`.
+Next up, we configure Solidity Hot Loader which is a webpack loader, so we'll be able to load our contracts using their Solidity names into the dapp using `import`.  To stop the Solidity Hot Loader automagically updating our contracts, set disabled to `true`.
 
 In the `client` directory create a `config` directory. In the `config` directory create a `webpack.js` file for the Solidity Hot Loader webpack rule with the following code, notice that we are starting with the Solidity Hot Loader enabled (`disabled: false`):
 
