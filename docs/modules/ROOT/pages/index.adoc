@@ -1,6 +1,6 @@
 = Solidity Loader
 
-Solidity Hot Loader is a webpack loader that watches the smart contract `.sol` files you’re using. Once there’s a change, it compiles them, updates the local blockchain using the https://openzeppelin.com/sdk/[OpenZeppelin SDK], and refreshes your app in the browser while preserving your blockchain state. Compare this against the existing Solidity development cycle.
+Solidity Hot Loader is a webpack loader that watches the smart contract `.sol` files you’re using. Once there’s a change, it compiles them, updates the local blockchain using the xref:upgrades::index.adoc[*OpenZeppelin Upgrades*], and refreshes your app in the browser while preserving your blockchain state.
 
 The Solidity Hot Loader development cycle:
 
@@ -59,5 +59,4 @@ Changes to your contracts in development will now hot load! ✨
 
  * Check out xref:getting-started.adoc[Getting Started] if you're new to the Solidity Loader
  * Watch our Devcon V https://youtu.be/KU6_r3sJ2E4[Delightful Developer Experience] presentation, by Igor Yalovoy.
-Igor Yalovoy.
  * For a step-by-step guide, head to xref:dapp.adoc[Building a Dapp with Solidity Hot Loader].

@@ -1,14 +1,13 @@
 = Building a Dapp with Solidity Hot Loader
 
-== Introduction
 
-In this guide, we will build a simple Dapp using the Solidity Hot Loader. We will create a Counter Dapp, which displays the value of a Counter that can be increased. We will update the code in the smart contract to show the power of the Solidity Hot Loader to automatically update the Dapp.
+In this guide we will build a simple Dapp using the Solidity Hot Loader: it will display the value of a `Counter` that can be increased. Then, we will update the code in the smart contract to show the power of the Solidity Hot Loader by automatically updating the Dapp.
 
 == Setup
 
 We will use the https://create-react-app.dev/[`create-react-app`] package to bootstrap a React application.
 
-First we need a local blockchain to develop on. We use `ganache-cli`, so go ahead and install (if you haven’t already) and then run a local blockchain using `ganache-cli`.
+First we need a xref:learn::deploying-and-interacting.adoc#local-blockchain[local blockchain] to develop on. We will use `ganache-cli`, so go ahead and install it (if you haven’t already) and then run a new instance:
 
 [source,console]
 ----
@@ -24,7 +23,7 @@ $ mkdir myproject && cd myproject
 $ npm init -y
 ----
 
-We use the OpenZeppelin CLI for compiling and deploying our contract, so go ahead and install *OpenZeppelin CLI*.
+We'll use the xref:cli::index.adoc[*OpenZeppelin CLI*] for compiling and deploying our contract. Install it and initialize your project with it:
 
 [source,console]
 ----
@@ -35,20 +34,20 @@ Next, initialize the project with OpenZeppelin. This will create directories and
 
 [source,console]
 ----
-$ npx openzeppelin init
+$ npx oz init
 ? Welcome to the OpenZeppelin SDK! Choose a name for your project myproject
 ? Initial project version 1.0.0
 Project initialized. Write a new contract in the contracts folder and run 'openzeppelin create' to deploy it.
 ----
 
-== Counter contract
+== `Counter` Contract
 
-Our Counter smart contract consists of an integer `value` and a function to increase it by one.
+Our `Counter` smart contract consists of an integer `value` and a function to increase it by one:
 
-In the `contracts` directory save `Counter.sol` with the following contents:
 
 [source,solidity]
 ----
+// contracts/Counter.sol
 pragma solidity ^0.5.0;
 
 contract Counter {
@@ -60,13 +59,12 @@ contract Counter {
 }
 ----
 
-Next we deploy the Counter contract to our local blockchain.
 
-Run `npx openzeppelin create` and use the interactive commands to deploy the Counter contract to the development network. There is no function that we need to call to `initialize`.
+We will now deploy our `Counter` contract to the local blockchain with `npx oz create`, replying 'no' when prompted to call an initialize function:
 
 [source,console]
 ----
-$ npx openzeppelin create
+$ npx oz create
 ✓ Compiled contracts with solc 0.5.14 (commit.1f1aaa4)
 ? Pick a contract to instantiate Counter
 ? Pick a network development
@@ -79,7 +77,7 @@ All contracts have been deployed
 0xCfEB869F69431e42cdB54A4F4f105C19C080A601
 ----
 
-== Creating the dapp
+== Creating the Dapp
 We will create our dapp using the `create-react-app` package, which bootstraps a simple client-side application using React.
 
 [source,console]
@@ -101,6 +99,8 @@ In the `client` directory create a `config` directory. In the `config` directory
 
 [source,javascript]
 ----
+// client/config/webpack.js
+
 const solidityLoaderOptions = {
   network: 'development',
   // you can stop loader from automatic compile/push/upgrade
@@ -128,7 +128,7 @@ We now add in the Solidity Hot Loader to webpack.  In the `client` directory cre
 
 [source,javascript]
 ----
-/* config-overrides.js */
+// client/config-overrides.js
 const { solidityLoader } = require('./config/webpack');
 
 module.exports = function override(config, env) {
@@ -161,17 +161,20 @@ To use `react-app-rewired`, we now need to change the `package.json` scripts.  I
 
 [source,javascript]
 ----
+// package.json
+  ...
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
+  ...
 ----
 
 == Add the dapp code
 
-We will use https://github.com/OpenZeppelin/openzeppelin-network.js[OpenZeppelin Network.js] to access the Web3 provider. *OpenZeppelin Network.js* is an easy to use and reliable library that provides one line access to the web3 API. It can be used in both React and in (vanilla) JavaScript. It also supports the Gas Station Network.
+We will use xref:network-js::index.adoc[[OpenZeppelin Network JS*] to access the Web3 provider. This is an easy to use and reliable library that provides one line access to the web3 API. It can be used in both React and (vanilla) JavaScript, and it also supports the Gas Station Network.
 
 First we change to the `client` directory.  Then, install *OpenZeppelin Network.js*
 
@@ -181,12 +184,13 @@ $ cd client
 $ npm install @openzeppelin/network 
 ----
 
-Our dapp will display a Counter that we can increase the value of, consisting of displaying the value and a button to increase the counter.
+Our dapp will display the state of `Counter` and provide a button that increases it.
 
 In the code below, first we import `useWeb3Injected` from the React implementation of *OpenZeppelin Network.js* (`@openzeppelin/network/react`). We then get a `web3Context` using `useWeb3Injected`. The dapp loads the Counter json artifact. The display of the Counter is handled in a component. To start, on the `client/src/App.js` file, replace the placeholder code in `App.js` in our react project with the following code:
 
 [source,javascript]
 ----
+// client/src/App.js
 import React, { useState } from 'react';
 import './App.css';
 
