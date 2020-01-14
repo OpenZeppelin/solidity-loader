@@ -159,14 +159,17 @@ $ npm i react-app-rewired
 
 To use `react-app-rewired`, we now need to change the `package.json` scripts.  In `package.json` in the `client` directory, update the scripts to use `react-app-rewired` so that they looks as follows:
 
-[source,javascript]
+[source,diff]
 ----
 // package.json
   ...
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
++    "start": "react-app-rewired start",
++    "build": "react-app-rewired build",
++    "test": "react-app-rewired test",
+-    "start": "react-scripts start",
+-    "build": "react-scripts build",
+-    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   ...
