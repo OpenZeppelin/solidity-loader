@@ -162,17 +162,17 @@ To use `react-app-rewired`, we now need to change the `package.json` scripts.  I
 [source,diff]
 ----
 // package.json
-  ...
-  "scripts": {
+   ...
+   "scripts": {
 +    "start": "react-app-rewired start",
 +    "build": "react-app-rewired build",
 +    "test": "react-app-rewired test",
 -    "start": "react-scripts start",
 -    "build": "react-scripts build",
 -    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  ...
+     "eject": "react-scripts eject"
+   },
+   ...
 ----
 
 == Add the dapp code
