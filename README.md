@@ -1,3 +1,9 @@
+```
+⚠️ This was an experiment that is no longer maintained.
+
+We encourage others to pick up the idea and develop it.
+```
+
 # solidity-loader
 
 Works well with [OpenZeppelin SDK](https://openzeppelin.com/sdk/) and [Starter Kit](https://openzeppelin.com/start/).
