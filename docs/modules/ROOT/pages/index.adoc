@@ -1,23 +1,62 @@
 = Solidity Loader
 
- * Allows importing .sol files directly into source code.
- * Allows to specify contract name for .sol files, like require("Contract.sol?contract=Counter").
- * Tracks dependencies for contracts, so children are updated when parents are modified.
- * Converts .sol files into .json using `compile oz`, `oz push`, and `oz update`.
- * Uses only development network so won't run on any other networks.
- * You can set the development network name using the loader's config.
- * Handles race conditions at Webpack pipeline using a lock.
- * Pulls build directory from truffle config.
- * In case oz commands are not available, uses cached versions of .json files.
- * Reports errors to console output and dev tools.
- * Compilation can be disabled using the loader's disabled config.
+Solidity Hot Loader is a webpack loader that watches the smart contract `.sol` files you’re using. Once there’s a change, it compiles them, updates the local blockchain using the xref:upgrades::index.adoc[*OpenZeppelin Upgrades*], and refreshes your app in the browser while preserving your blockchain state.
+
+The existing (slow) Solidity development cycle:
+
+1.  Make a change to your smart contract `.sol` file and save it.
+2.  Compile your contract.
+3.  Deploy your contract.
+4.  Restore the state.
+5.  Restart dapp to get new contract.
+
+The Solidity Hot Loader development cycle:
+
+1.  Make a change to your smart contract `.sol` file and save it.
+2.  Wait a bit.
+3.  Done.
 
 == Overview
 
 === Installation
 
+[source,console]
+----
+$ npm install @openzeppelin/solidity-loader json-loader
+----
+
 === Usage
+
+Add the following https://webpack.js.org/configuration/module/#rule[rule] into your webpack configuration:
+[source,javascript]
+----
+solidityLoader: {
+  test: /\.sol$/,
+  use: [
+    { loader: 'json-loader' },
+    {
+      loader: '@openzeppelin/solidity-loader',
+      options: {
+        network: 'development',
+        disabled: false,
+      }
+    },
+  ],
+}
+----
+
+NOTE: If you are using `create-react-app`, you may need to either eject the application to modify the webpack configuration, or use https://github.com/timarney/react-app-rewired[`react-app-rewired`].
+
+Import your Solidity contracts into JavaScript like this:
+[source,javascript]
+----
+counterJSON = require('../../contracts/Counter.sol');
+----
+
+Changes to your contracts in development will now hot load! ✨
 
 == Learn More
 
- * xref:getting-started.adoc[Getting Started]
+ * Check out xref:getting-started.adoc[Getting Started] if you're new to the Solidity Loader
+ * Watch our Devcon V https://youtu.be/KU6_r3sJ2E4[Delightful Developer Experience] presentation, by Igor Yalovoy.
+ * For a step-by-step guide, head to xref:dapp.adoc[Building a Dapp with Solidity Hot Loader].

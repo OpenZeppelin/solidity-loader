@@ -1,0 +1,123 @@
+= Building a Dapp with Solidity Hot Loader
+
+In this guide we will cover how to build a (webpack bundled) dapp with Solidity Hot Loader so that the dapp will automatically pick up any changes to the Solidity code and upgrade the contract during development. The OpenZeppelin Hot Loader will watch all our Solidity contracts for changes, and automatically recompile and upgrade the contract on the local development network - keeping the same address and state, and just changing the code to the new version we wrote.
+
+== Setup Solidity Hot Loader
+
+First we install *Solidity Hot Loader* and `json-loader` in our dapp project.
+
+[source,console]
+----
+$ npm install @openzeppelin/solidity-loader json-loader
+----
+
+Next up, we configure the webpack rule for the Solidity Hot Loader.  In addition to hot-loading, the Solidity Hot Loader will enable us to load our contracts using their Solidity names into the dapp using `require`.  
+
+In the dapp client directory create a `config` directory containing a `webpack.js` file for the Solidity Hot Loader webpack rule with the following code, notice that we are starting with the Solidity Hot Loader enabled (`disabled: false`):
+
+[source,javascript]
+----
+// client/config/webpack.js
+
+const solidityLoaderOptions = {
+  network: 'development',
+  // you can stop loader from automatic compile/push/upgrade
+  // action by setting disabled flag to true, but it will still
+  // serve .json files from file system
+  disabled: false,
+};
+
+module.exports = {
+  solidityLoader: {
+    test: /\.sol$/,
+    use: [
+      { loader: 'json-loader' },
+      {
+        loader: '@openzeppelin/solidity-loader',
+        options: solidityLoaderOptions,
+      },
+    ],
+  },
+  solidityLoaderOptions,
+};
+----
+
+The next step is to add in the Solidity Hot Loader to webpack.  
+
+If we use `create-react-app` for our dapp then we need to eject or rewire the dapp so that we can change the webpack config.  In this guide we use https://github.com/timarney/react-app-rewired[`react-app-rewired`] to rewire `create-react-app` webpack config rather than ejecting.
+
+In the client directory, install `react-app-rewired`
+
+[source,console]
+----
+$ npm i react-app-rewired
+----
+
+In the client directory create a `config-overrides.js` file with the following code to add Solidity Hot Loader to webpack:
+
+[source,javascript]
+----
+// client/config-overrides.js
+const { solidityLoader } = require('./config/webpack');
+
+module.exports = function override(config, env) {
+  //do stuff with the webpack config...
+
+  // allow importing from outside of app/src folder, ModuleScopePlugin prevents this.
+  const scope = config.resolve.plugins.findIndex(o => o.constructor.name === 'ModuleScopePlugin');
+  if (scope > -1) {
+    config.resolve.plugins.splice(scope, 1);
+  }
+
+  // add solidity loader support
+  // have to insert before last loader, because CRA user 'file-loader' as default one
+  config.module.rules.splice(config.module.rules - 2, 0, solidityLoader);
+
+  return config;
+};
+----
+
+To use `react-app-rewired`, we now need to change the `package.json` scripts.  In `package.json` in the `client` directory, update the scripts to use `react-app-rewired` so that they looks as follows:
+
+[source,diff]
+----
+// package.json
+   ...
+   "scripts": {
++    "start": "react-app-rewired start",
++    "build": "react-app-rewired build",
++    "test": "react-app-rewired test",
+-    "start": "react-scripts start",
+-    "build": "react-scripts build",
+-    "test": "react-scripts test",
+     "eject": "react-scripts eject"
+   },
+   ...
+----
+
+== Add the contract to the dapp
+
+We can load our contract json artifact using `require` with the following code:
+
+[source,javascript]
+----
+  // load MyContract json artifact
+  let myContractJSON = undefined;
+  try {
+    // see https://github.com/OpenZeppelin/solidity-loader
+    myContractJSON = require('../../contracts/MyContract.sol');
+  } catch (e) {
+    console.log(e);
+  }
+----
+
+== Solidity Hot Loader in action
+We can now make changes to our contract and this will be reflected in the dapp using the Solidity Hot Loader.
+
+Make a change in our contract and Solidity Hot Loader will automatically compile the contract, upgrade it and refresh the dapp, whilst maintaining state and address.
+
+To stop the Solidity Hot Loader automagically updating our contracts, set disabled to `true`.
+
+NOTE: The Solidity Hot Loader under the covers uses OpenZeppelin SDK upgradeable contracts, so is limited to contracts that can be upgradeable: https://docs.openzeppelin.com/sdk/2.6/writing-contracts
+
+For a step-by-step tutorial of creating a dapp from scratch see https://forum.openzeppelin.com/t/building-an-openzeppelin-dapp-with-solidity-hot-loader/1843[Building an OpenZeppelin dapp with Solidity Hot Loader].

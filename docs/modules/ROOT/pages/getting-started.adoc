@@ -1,1 +1,152 @@
 = Getting Started
+
+== Introduction
+
+The easiest way to get started using Solidity Hot Loader is using a xref:starter-kits::index.adoc[Starter Kit]. In this guide we walk through using Solidity Hot Loader with the xref:starter-kits::tutorial.adoc[Tutorial Starter Kit]. 
+
+This Kit includes a Counter dapp, which displays the value of a Counter that can be increased and decreased: we will make changes to the code of the smart contract to show the power of the Solidity Hot Loader.
+
+== Setup
+First we need a xref:learn::deploying-and-interacting.adoc#local-blockchain[local blockchain] to develop on. We will use `ganache-cli`, so go ahead and install (if you haven't already) and then run a local blockchain using `ganache-cli`
+
+[source,console]
+----
+$ npm install -g ganache-cli
+$ ganache-cli --deterministic
+----
+
+Next we need a project directory to develop our project in. In a separate terminal create the project directory:
+
+[source,console]
+----
+$ mkdir myproject && cd myproject
+----
+
+Unpack the Tutorial Starter Kit using the xref:cli::index.adoc[*OpenZeppelin CLI*]. This could take a little while, so maybe make a cup of tea.
+
+[source,console]
+----
+$ npx @openzeppelin/cli unpack tutorial
+----
+
+The Solidity Hot Loader already comes installed with the Tutorial Starter Kit: all we need to do is enable it. Do this by setting `disabled: false` in `client/config/webpack.js`:
+
+[source,diff]
+----
+ // client/config/webpack.js
+ const solidityLoaderOptions = {
+   network: 'development',
+   // you can stop loader from automatic compile/push/upgrade
+   // action by setting disabled flag to true, but it will still
+   // serve .json files from file system
+-  disabled: true,
++  disabled: false,
+ };
+
+ module.exports = {
+   solidityLoader: {
+     test: /\.sol$/,
+     use: [
+       { loader: 'json-loader' },
+       {
+         loader: '@openzeppelin/solidity-loader',
+         options: solidityLoaderOptions,
+       },
+     ],
+   },
+   solidityLoaderOptions,
+ };
+----
+
+== Compiling and Deploying
+Initialize the project with OpenZeppelin.
+
+[source,console]
+----
+$ npx openzeppelin init
+? Welcome to the OpenZeppelin SDK! Choose a name for your project myproject
+? Initial project version 1.0.2
+Project initialized. Write a new contract in the contracts folder and run 'openzeppelin create' to deploy it.
+----
+
+The Tutorial Starter Kit already comes with a `Counter` contract: compile it using the OpenZeppelin CLI:
+
+[source,console]
+----
+$ npx openzeppelin compile
+✓ Compiled contracts with solc 0.5.13 (commit.5b0b510c)
+----
+
+We will now deploy `Counter` to our local ganache blockchain. Run `npx openzeppelin create` and use the interactive commands to deploy the `Counter` contract to the development network, calling `initialize` with a numeric value (here we use '23'):
+
+[source,console]
+----
+$ npx openzeppelin create
+Nothing to compile, all contracts are up to date.
+? Pick a contract to instantiate Counter
+? Pick a network development
+✓ Added contract Counter
+✓ Contract Counter deployed
+All contracts have been deployed
+? Call a function to initialize the instance after creating it? Yes
+? Select which function * initialize(num: uint256)
+? num (uint256): 23
+✓ Setting everything up to create contract instances
+✓ Instance created at 0xCfEB869F69431e42cdB54A4F4f105C19C080A601
+0xCfEB869F69431e42cdB54A4F4f105C19C080A601
+----
+TIP: If you're unfamiliar with using the OpenZeppelin CLI to deploy smart contracts, head to our xref:learn::deploying-and-interacting.adoc#getting-started-with-the-cli[Getting Started] guide.
+
+== Using our dapp
+
+We are now ready to start the dapp!
+
+[source,console]
+----
+$ cd client
+$ npm run start
+----
+
+The app will open in a browser (http://localhost:3000).  Click on Counter to go to http://localhost:3000/counter
+
+In MetaMask change your network to Localhost:8545 to connect to `ganache-cli`.
+
+== Fund MetaMask account
+If you need to fund your MetaMask account (e.g. it has a balance of 0 test Ether).
+
+From your project directory in another terminal, call `npx openzeppelin transfer` to transfer 0.5 (test) ether to your account in MetaMask.
+
+[source,console]
+----
+$ npx openzeppelin transfer
+? Pick a network development
+? Choose the account to send transactions from (0) 0xF983502f33E2c9E62d0465557446B86C595C4919
+? Enter the receiver account 0x77737a65C296012C67F8c7f656d1Df81827c9541
+? Enter an amount to transfer 0.5 ether
+✓ Funds sent. Transaction hash: 0x69a0ecc17b325a0e4cd414ca9d197a59e88a466c8d3b4d7a0a518ca384526af4
+----
+
+== Use the app
+The app is a simple counter.  To increase the counter, press *Increase Counter by 1* button. Confirm the transaction in MetaMask and once the transaction is confirmed the app will have the updated counter value.
+
+== Update the Counter contract
+If we wanted to change the Counter contract, without Solidity Hot Loader, after making the change, we would need to compile the contract, deploy the contract, restore the state and restart the app.  Instead, with Solidity Hot Loader, after making the change we just need to wait a bit and then we are done!
+
+To see this in action, in an editor, modify the Counter contract to change the calculation in the `increaseCounter` function to add 3.
+
+[source,diff]
+----
+  function increaseCounter(uint256 amount) public {
+-    count = count + 1;
++    count = count + 3;
+  }
+----
+
+The Solidity Hot Loader will recompile the contract and upgrade it on the development network and update the artifacts. We can see in the terminal when it is compiling.
+
+In the app, notice that the value of the counter doesn't change, as the state is maintained. Then press *Increase Counter by 1* button. Confirm the transaction in MetaMask and once the transaction is confirmed the app will have the updated counter value. 
+The value should increase by 3.
+
+The Solidity Hot Loader allows us to develop smart contracts faster, improving the developer experience.
+
+NOTE: The Solidity Hot Loader under the covers uses OpenZeppelin SDK upgradeable contracts, so is limited to contracts that can be upgradeable: https://docs.openzeppelin.com/sdk/2.6/writing-contracts
